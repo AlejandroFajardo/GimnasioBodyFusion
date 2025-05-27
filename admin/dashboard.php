@@ -128,7 +128,14 @@ include '../includes/db.php';
     ?>
 
     <h4 class="text-center mt-5">Contenidos publicados</h4>
-    <div class="row">
+    <div class="container text-center mt-5">
+        <h4 class="text-warning mb-4">Selecciona qué contenido ver</h4>
+        <div class="btn-group mb-4" role="group">
+            <button class="btn btn-outline-light" onclick="mostrarCategoria('rutinas')">Rutinas</button>
+            <button class="btn btn-outline-light" onclick="mostrarCategoria('recetas')">Recetas</button>
+            <button class="btn btn-outline-light" onclick="mostrarCategoria('recomendaciones')">Recomendaciones</button>
+        </div>
+
         <?php
         $tablas = [
             'rutinas' => 'Rutinas de entrenamiento',
@@ -139,32 +146,46 @@ include '../includes/db.php';
         foreach ($tablas as $tabla => $titulo) {
             $res = $conn->query("SELECT * FROM $tabla ORDER BY id DESC");
 
+            echo '<div id="' . $tabla . '" class="categoria-contenido" style="display: none;">';
             if ($res->num_rows > 0) {
-                echo '<div class="container mt-5">';
-                echo '<h3 class="text-center text-warning mb-4">'.htmlspecialchars($titulo).'</h3>';
+                echo '<h3 class="text-center text-warning mb-4">' . htmlspecialchars($titulo) . '</h3>';
                 echo '<div class="row">';
-
                 while ($row = $res->fetch_assoc()) {
                     echo '<div class="col-sm-12 col-md-6 col-lg-4 mb-4">
                     <div class="card">
-                        <div class="card-header text-uppercase text-center fw-bold">'.strtoupper($tabla).'</div>
+                        <div class="card-header text-uppercase text-center fw-bold">' . strtoupper($tabla) . '</div>
                         <div class="card-body">
-                            <h5 class="card-title text-center">'.htmlspecialchars($row['titulo']).'</h5>
+                            <h5 class="card-title text-center">' . htmlspecialchars($row['titulo']) . '</h5>
                             <div class="text-center mb-2">
-                                <span class="badge objetivo-badge">'.htmlspecialchars($row['objetivo']).'</span>
+                                <span class="badge objetivo-badge">' . htmlspecialchars($row['objetivo']) . '</span>
                             </div>
-                            <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+                            <p class="card-text">' . nl2br(htmlspecialchars($row['descripcion'])) . '</p>
                         </div>
                     </div>
                 </div>';
                 }
-
-                echo '</div>'; // .row
-                echo '</div>'; // .container
+                echo '</div>'; // row
+            } else {
+                echo '<p class="text-muted">No hay contenidos disponibles.</p>';
             }
+            echo '</div>'; // fin categoría
         }
         ?>
     </div>
+
+    <script>
+        function mostrarCategoria(id) {
+            const categorias = document.querySelectorAll('.categoria-contenido');
+            categorias.forEach(div => {
+                div.style.display = 'none';
+            });
+            const activo = document.getElementById(id);
+            if (activo) {
+                activo.style.display = 'block';
+            }
+        }
+    </script>
+
 </div>
 </body>
 </html>
