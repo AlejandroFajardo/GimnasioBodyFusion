@@ -99,87 +99,113 @@ $objetivoUsuario = $user['objetivo'];
 <main class="container mb-5"><br>
     <h1 class="text-danger text-center mb-4">Contenido personalizado para ti</h1>
 
-    <!-- Rutinas -->
-    <h4 class="text-danger text-center mb-4">Rutinas</h4>
-    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
-        <?php
-        $stmt = $conn->prepare("SELECT * FROM rutinas WHERE objetivo = ? ORDER BY id DESC");
-        $stmt->bind_param("s", $objetivoUsuario);
-        $stmt->execute();
-        $res = $stmt->get_result();
-
-        if ($res->num_rows > 0) {
-            while ($row = $res->fetch_assoc()) {
-                echo '
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
-                            <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
-                        </div>
-                    </div>
-                </div>';
-            }
-        } else {
-            echo '<div class="col"><div class="alert alert-info">No hay rutinas disponibles para tu objetivo.</div></div>';
-        }
-        ?>
+    <!-- Botones para seleccionar categoría -->
+    <div class="text-center mb-4">
+        <button class="btn btn-outline-danger mx-1" onclick="mostrarSeccion('rutinas')">Rutinas</button>
+        <button class="btn btn-outline-danger mx-1" onclick="mostrarSeccion('recomendaciones')">Recomendaciones</button>
+        <button class="btn btn-outline-danger mx-1" onclick="mostrarSeccion('recetas')">Recetas</button>
     </div>
 
-    <!-- Recomendaciones -->
-    <h4 class="text-danger text-center mb-4">Recomendaciones</h4>
-    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
-        <?php
-        $stmt = $conn->prepare("SELECT * FROM recomendaciones WHERE objetivo = ? ORDER BY id DESC");
-        $stmt->bind_param("s", $objetivoUsuario);
-        $stmt->execute();
-        $res = $stmt->get_result();
+    <!-- Sección Rutinas -->
+    <div id="rutinas" class="seccion-contenido" style="display: block;">
+        <h4 class="text-danger text-center mb-4">Rutinas</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+            <?php
+            $stmt = $conn->prepare("SELECT * FROM rutinas WHERE objetivo = ? ORDER BY id DESC");
+            $stmt->bind_param("s", $objetivoUsuario);
+            $stmt->execute();
+            $res = $stmt->get_result();
 
-        if ($res->num_rows > 0) {
-            while ($row = $res->fetch_assoc()) {
-                echo '
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
-                            <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    echo '
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
+                                <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+                            </div>
                         </div>
-                    </div>
-                </div>';
+                    </div>';
+                }
+            } else {
+                echo '<div class="col"><div class="alert alert-info">No hay rutinas disponibles para tu objetivo.</div></div>';
             }
-        } else {
-            echo '<div class="col"><div class="alert alert-info">No hay recomendaciones disponibles para tu objetivo.</div></div>';
-        }
-        ?>
+            ?>
+        </div>
     </div>
 
-    <!-- Recetas -->
-    <h4 class="text-danger text-center mb-4">Recetas</h4>
-    <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
-        <?php
-        $stmt = $conn->prepare("SELECT * FROM recetas WHERE objetivo = ? ORDER BY id DESC");
-        $stmt->bind_param("s", $objetivoUsuario);
-        $stmt->execute();
-        $res = $stmt->get_result();
+    <!-- Sección Recomendaciones -->
+    <div id="recomendaciones" class="seccion-contenido" style="display: none;">
+        <h4 class="text-danger text-center mb-4">Recomendaciones</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+            <?php
+            $stmt = $conn->prepare("SELECT * FROM recomendaciones WHERE objetivo = ? ORDER BY id DESC");
+            $stmt->bind_param("s", $objetivoUsuario);
+            $stmt->execute();
+            $res = $stmt->get_result();
 
-        if ($res->num_rows > 0) {
-            while ($row = $res->fetch_assoc()) {
-                echo '
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
-                            <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    echo '
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
+                                <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+                            </div>
                         </div>
-                    </div>
-                </div>';
+                    </div>';
+                }
+            } else {
+                echo '<div class="col"><div class="alert alert-info">No hay recomendaciones disponibles para tu objetivo.</div></div>';
             }
-        } else {
-            echo '<div class="col"><div class="alert alert-info">No hay recetas disponibles para tu objetivo.</div></div>';
-        }
-        ?>
+            ?>
+        </div>
+    </div>
+
+    <!-- Sección Recetas -->
+    <div id="recetas" class="seccion-contenido" style="display: none;">
+        <h4 class="text-danger text-center mb-4">Recetas</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+            <?php
+            $stmt = $conn->prepare("SELECT * FROM recetas WHERE objetivo = ? ORDER BY id DESC");
+            $stmt->bind_param("s", $objetivoUsuario);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    echo '
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">'.htmlspecialchars($row['titulo']).'</h5>
+                                <p class="card-text">'.nl2br(htmlspecialchars($row['descripcion'])).'</p>
+                            </div>
+                        </div>
+                    </div>';
+                }
+            } else {
+                echo '<div class="col"><div class="alert alert-info">No hay recetas disponibles para tu objetivo.</div></div>';
+            }
+            ?>
+        </div>
     </div>
 </main>
+
+<!-- Script para mostrar secciones -->
+<script>
+    function mostrarSeccion(id) {
+        const secciones = document.querySelectorAll('.seccion-contenido');
+        secciones.forEach(sec => sec.style.display = 'none');
+        const activa = document.getElementById(id);
+        if (activa) {
+            activa.style.display = 'block';
+        }
+    }
+</script>
+
 
 <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
